@@ -6,7 +6,13 @@ import (
 )
 
 func main() {
-	fmt.Println("vim-go")
+	n := 1723343
+	factors := getfactors(n)
+	fmt.Println(factors)
+	pfactors := getprimes(factors)
+	fmt.Println(pfactors)
+
+	//fmt.Println(pfactors[len(pfactors)-1])
 }
 
 // get all factors of n
@@ -15,10 +21,12 @@ func main() {
 func getfactors(n int) []int {
 	var factors []int
 
-	limit := math.Sqrt(n)
+	limit := int(math.Sqrt(float64(n)))
 	for i := 2; i < limit; i++ {
+		fmt.Printf("%d\n")
 		if i%n == 0 {
 			factors = append(factors, i)
+			fmt.Println("made it here")
 		}
 	}
 	return factors
@@ -28,7 +36,7 @@ func isprime(n int) bool {
 	if n < 2 {
 		return false
 	}
-	for i := 2; int(math.Sqrt(float64(n))); i++ {
+	for i := 2; i <= int(math.Sqrt(float64(n))); i++ {
 		if n%i == 0 {
 			return false
 		}
@@ -37,7 +45,11 @@ func isprime(n int) bool {
 }
 
 func getprimes(factors []int) []int {
-	for i := range factors {
-
+	var pfactors []int
+	for factor := range factors {
+		if isprime(factor) {
+			pfactors = append(pfactors, factor)
+		}
 	}
+	return pfactors
 }
