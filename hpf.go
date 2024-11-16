@@ -2,31 +2,41 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
+	"os"
+	"strconv"
 )
 
 func main() {
-	n := 1723343
-	factors := getfactors(n)
-	fmt.Println(factors)
-	pfactors := getprimes(factors)
-	fmt.Println(pfactors)
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: pass in number as an Arg that you want the highest prime factorial for.")
+		os.Exit(1)
+	}
 
-	//fmt.Println(pfactors[len(pfactors)-1])
+	n, err := strconv.Atoi(os.Args[1])
+	if err != nil {
+		log.Fatalf("Argument was not a number")
+	}
+	// DEBUG: test cases
+
+	//n := 1723343
+	//n := 157732
+	//n := 100
+
+	factors := getfactors(n)
+	pfactors := getprimes(factors)
+
+	fmt.Println(pfactors[len(pfactors)-1])
 }
 
-// get all factors of n
-// easiest way is to find any number that below sqrt(n)
-// that x % n == 0
 func getfactors(n int) []int {
 	var factors []int
 
 	limit := int(math.Sqrt(float64(n)))
 	for i := 2; i < limit; i++ {
-		fmt.Printf("%d\n")
-		if i%n == 0 {
+		if n%i == 0 {
 			factors = append(factors, i)
-			fmt.Println("made it here")
 		}
 	}
 	return factors
