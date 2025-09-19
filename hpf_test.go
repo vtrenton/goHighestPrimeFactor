@@ -1,10 +1,38 @@
 package main
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
 
 func TestMain(t *testing.T) {}
 
-func TestGetFactors(t *testing.T) {}
+func TestGetFactors(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		in   int
+		want []int
+	}{
+
+		{name: "get all factors of 100", in: 100, want: []int{2, 4, 5, 10, 20, 25, 50}},
+		{name: "get all factors of 25", in: 25, want: []int{5}},
+		{name: "primes dont have factors", in: 97, want: []int{}},
+		{name: "numbers between -2 and 2 return early", in: 1, want: []int{}},
+		{name: "test 2 to assure it returns early", in: 2, want: []int{}},
+		{name: "test negative return early", in: -2, want: []int{}},
+		{name: "test negative number for negative factors", in: -100, want: []int{-2, -4, -5, -10, -20, -25, -50}},
+	}
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			if !slices.Equal(getfactors(tc.in), tc.want) {
+				t.Errorf("")
+			}
+		})
+	}
+}
 
 func TestIsPrime(t *testing.T) {
 	t.Parallel() // run as a goroutine to speed up tests

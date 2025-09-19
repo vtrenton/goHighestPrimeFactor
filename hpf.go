@@ -18,6 +18,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Argument was not a number")
 	}
+
 	// DEBUG: test cases
 
 	//n := 1723343
@@ -25,6 +26,11 @@ func main() {
 	//n := 100
 
 	factors := getfactors(n)
+	if len(factors) == 0 {
+		fmt.Println("Input number has no factors!")
+		return
+	}
+
 	pfactors := getprimes(factors)
 
 	fmt.Println(pfactors[len(pfactors)-1])
@@ -32,6 +38,9 @@ func main() {
 
 func getfactors(n int) []int {
 	var factors []int
+	if n >= -2 && n <= 2 {
+		return factors //early return for inputs between -2 and 2
+	}
 
 	limit := int(math.Sqrt(float64(n)))
 	for i := 2; i < limit; i++ {
