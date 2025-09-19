@@ -27,8 +27,8 @@ func TestGetFactors(t *testing.T) {
 	for _, tc := range tests {
 		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
-			if !slices.Equal(getfactors(tc.in), tc.want) {
-				t.Errorf("")
+			if got := getfactors(tc.in); !slices.Equal(got, tc.want) {
+				t.Errorf("%s: failed! got: %v, but wanted: %v", tc.name, got, tc.want)
 			}
 		})
 	}
