@@ -55,10 +55,12 @@ func relevantFactors(n int) []int {
 	}
 
 	limit := int(math.Sqrt(float64(n)))
-	for i := 2; i <= limit; i++ {
-		if i > 2 && i%2 == 0 { // even numbers above 2 are never prime
-			continue
-		}
+
+	// Append 2 to the list if n is even
+	if n%2 == 0 {
+		factors = append(factors, 2)
+	}
+	for i := 3; i <= limit; i += 2 {
 		if n%i == 0 {
 			factors = append(factors, i)
 		}
