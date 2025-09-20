@@ -35,11 +35,6 @@ func run(osargs []string) (int, error) {
 	if n < 0 {
 		return 0, errors.New("negative numbers are not supported")
 	}
-	// DEBUG: test cases
-
-	//n := 1723343
-	//n := 157732
-	//n := 100
 
 	// Collect factors up to sqrt(n) for prime calculation
 	var relevantFactors []int
