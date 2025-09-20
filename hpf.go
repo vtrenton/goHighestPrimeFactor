@@ -22,8 +22,8 @@ func main() {
 }
 
 func run(osargs []string) (int, error) {
-	if len(osargs) < 2 {
-		return 0, errors.New("usage: pass in a postive number as an Arg that you want the highest prime factorial for")
+	if len(osargs) != 2 {
+		return 0, errors.New("usage: pass in a single  postive number as an Arg that you want the highest prime factorial for")
 		os.Exit(1)
 	}
 

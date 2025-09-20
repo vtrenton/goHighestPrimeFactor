@@ -5,7 +5,46 @@ import (
 	"testing"
 )
 
-func TestMain(t *testing.T) {}
+func TestRun(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name    string
+		args    []string
+		want    int
+		wantErr bool
+	}{
+		{name: "valid input returns highest prime factor", args: []string{"program", "100"}, want: 5, wantErr: false},
+		{name: "prime number has no factors", args: []string{"program", "97"}, want: 0, wantErr: true},
+		{name: "small number with factors", args: []string{"program", "25"}, want: 5, wantErr: false},
+		{name: "no arguments returns error", args: []string{"program"}, want: 0, wantErr: true},
+		{name: "too many arguments returns error", args: []string{"program", "100", "200"}, want: 0, wantErr: true},
+		{name: "non-numeric argument returns error", args: []string{"program", "abc"}, want: 0, wantErr: true},
+		{name: "negative number returns error", args: []string{"program", "-5"}, want: 0, wantErr: true},
+		{name: "zero returns error", args: []string{"program", "0"}, want: 0, wantErr: true},
+		{name: "one returns error", args: []string{"program", "1"}, want: 0, wantErr: true},
+		{name: "two returns error", args: []string{"program", "2"}, want: 0, wantErr: true},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			got, err := run(tc.args)
+
+			if tc.wantErr {
+				if err == nil {
+					t.Errorf("expected error but got none, result: %d", got)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("unexpected error: %v", err)
+				} else if got != tc.want {
+					t.Errorf("got %d, want %d", got, tc.want)
+				}
+			}
+		})
+	}
+}
 
 func TestFactors(t *testing.T) {
 	t.Parallel()
@@ -26,7 +65,6 @@ func TestFactors(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			var got []int
@@ -34,7 +72,7 @@ func TestFactors(t *testing.T) {
 				got = append(got, factor)
 			}
 			if !slices.Equal(got, tc.want) {
-				t.Errorf("test: %s: failed! got %v, want %v", tc.name, got, tc.want)
+				t.Errorf("got %v, want %v", got, tc.want)
 			}
 		})
 	}
@@ -77,7 +115,6 @@ func TestIsPrime(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc // capture for t.Parallel inside subtests
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			if got := isprime(tc.in); got != tc.want {
@@ -88,5 +125,21 @@ func TestIsPrime(t *testing.T) {
 }
 
 func TestGetPrimes(t *testing.T) {
-	//t.Run("")
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		in   []int
+		want []int
+	}{
+		{name: "empty test", in: []int{}, want: []int{}},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			if got := getprimes(tc.in); !slices.Equal(got, tc.want) {
+				t.Errorf("test %s failed, got: %v want %v", tc.name, got, tc.want)
+			}
+		})
+	}
 }
