@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"iter"
 	"log"
@@ -10,18 +11,29 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: pass in a postive number as an Arg that you want the highest prime factorial for.")
+	osargs := os.Args
+
+	hpf, err := run(osargs)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(hpf)
+}
+
+func run(osargs []string) (int, error) {
+	if len(osargs) < 2 {
+		return 0, errors.New("usage: pass in a postive number as an Arg that you want the highest prime factorial for")
 		os.Exit(1)
 	}
 
-	n, err := strconv.Atoi(os.Args[1])
+	n, err := strconv.Atoi(osargs[1])
 	if err != nil {
-		log.Fatal("Argument was not a number")
+		return 0, err
 	}
 
 	if n < 0 {
-		log.Fatal("negative numbers are not supported")
+		return 0, errors.New("negative numbers are not supported")
 	}
 	// DEBUG: test cases
 
@@ -41,13 +53,12 @@ func main() {
 	}
 
 	if len(relevantFactors) == 0 {
-		fmt.Println("Input number has no factors!")
-		return
+		return 0, errors.New("input number has no factors")
 	}
 
 	pfactors := getprimes(relevantFactors)
 
-	fmt.Println(pfactors[len(pfactors)-1])
+	return pfactors[len(pfactors)-1], nil
 }
 
 // factors returns an iterator that yields factors of n one at a time
