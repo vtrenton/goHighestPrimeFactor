@@ -23,7 +23,7 @@ func main() {
 
 func run(osargs []string) (int, error) {
 	if len(osargs) != 2 {
-		return 0, errors.New("usage: pass in a single postive number as an Arg that you want the highest prime factorial for")
+		return 0, errors.New("usage: pass in a single postive non-prime number as an Arg that you want the highest prime factorial for")
 	}
 
 	n, err := strconv.Atoi(osargs[1])
@@ -47,7 +47,7 @@ func run(osargs []string) (int, error) {
 	}
 
 	if len(relevantFactors) == 0 {
-		return 0, errors.New("input number has no factors")
+		return 0, errors.New("input number is prime")
 	}
 
 	pfactors := getprimes(relevantFactors)
