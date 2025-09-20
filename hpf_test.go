@@ -46,29 +46,32 @@ func TestRun(t *testing.T) {
 	}
 }
 
-func TestFactors(t *testing.T) {
+func TestFactorsUpToSqrt(t *testing.T) {
 	t.Parallel()
 
-	// Test complete iteration
+	// Test factors up to sqrt(n)
 	tests := []struct {
 		name string
 		in   int
 		want []int
 	}{
-		{name: "get all factors of 100", in: 100, want: []int{2, 4, 5, 10, 20, 25, 50}},
-		{name: "get all factors of 25", in: 25, want: []int{5}},
+		{name: "factors of 100 up to sqrt(100)=10 (including 10)", in: 100, want: []int{2, 4, 5, 10}},
+		{name: "factors of 36 up to sqrt(36)=6 (including 6)", in: 36, want: []int{2, 3, 4, 6}},
+		{name: "factors of 25 up to sqrt(25)=5 (including 5)", in: 25, want: []int{5}},
 		{name: "primes have no factors", in: 97, want: []int{}},
 		{name: "numbers below 2 return early", in: 1, want: []int{}},
 		{name: "test 2 to assure it returns early", in: 2, want: []int{}},
 		{name: "test negative return early", in: -2, want: []int{}},
-		{name: "small composite number", in: 12, want: []int{2, 3, 4, 6}},
+		{name: "small composite number 12 up to sqrt(12)≈3.46", in: 12, want: []int{2, 3}},
+		{name: "perfect square 16 up to sqrt(16)=4 (including 4)", in: 16, want: []int{2, 4}},
+		{name: "perfect square 49 up to sqrt(49)=7 (including 7)", in: 49, want: []int{7}},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			var got []int
-			for factor := range factors(tc.in) {
+			for factor := range factorsUpToSqrt(tc.in) {
 				got = append(got, factor)
 			}
 			if !slices.Equal(got, tc.want) {
@@ -80,7 +83,7 @@ func TestFactors(t *testing.T) {
 	// Test early termination
 	t.Run("early termination", func(t *testing.T) {
 		var got []int
-		for factor := range factors(100) {
+		for factor := range factorsUpToSqrt(100) {
 			if factor >= 10 {
 				break
 			}
@@ -132,6 +135,8 @@ func TestGetPrimes(t *testing.T) {
 		in   []int
 		want []int
 	}{
+		{name: "generic test", in: []int{1, 2, 3, 4, 5, 6, 7, 8, 9}, want: []int{2, 3, 5, 7}},
+		{name: "unordered test (order preservation)", in: []int{3, 12, 11, 14, 8, 7}, want: []int{3, 11, 7}},
 		{name: "empty test", in: []int{}, want: []int{}},
 	}
 	for _, tc := range tests {

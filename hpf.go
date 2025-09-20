@@ -37,12 +37,7 @@ func run(osargs []string) (int, error) {
 
 	// Collect factors up to sqrt(n) for prime calculation
 	var relevantFactors []int
-	limit := int(math.Sqrt(float64(n)))
-
-	for factor := range factors(n) {
-		if factor > limit {
-			break // stop at sqrt(n) - larger factors aren't needed for prime calculation
-		}
+	for factor := range factorsUpToSqrt(n) {
 		relevantFactors = append(relevantFactors, factor)
 	}
 
@@ -55,15 +50,16 @@ func run(osargs []string) (int, error) {
 	return pfactors[len(pfactors)-1], nil
 }
 
-// factors returns an iterator that yields factors of n one at a time
-// This allows for lazy evaluation and early termination
-func factors(n int) iter.Seq[int] {
+// factorsUpToSqrt returns an iterator that yields factors of n up to sqrt(n)
+// This is specifically optimized for prime factorization where larger factors aren't needed
+func factorsUpToSqrt(n int) iter.Seq[int] {
 	return func(yield func(int) bool) {
 		if n <= 2 {
 			return // no factors for numbers <= 2
 		}
 
-		for i := 2; i < n; i++ {
+		limit := int(math.Sqrt(float64(n)))
+		for i := 2; i <= limit; i++ {
 			if n%i == 0 {
 				if !yield(i) {
 					return // consumer requested early termination
