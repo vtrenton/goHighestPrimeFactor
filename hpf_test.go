@@ -67,6 +67,7 @@ func TestIsPrime(t *testing.T) {
 		{name: "two is prime", in: 2, want: true},
 		{name: "three is prime", in: 3, want: true},
 		{name: "four is not prime", in: 4, want: false},
+		{name: "five is prime", in: 5, want: true},
 		{name: "six is not prime", in: 6, want: false},
 		{name: "seven is prime", in: 7, want: true},
 		{name: "nine is not prime", in: 9, want: false},
@@ -87,5 +88,5 @@ func TestIsPrime(t *testing.T) {
 }
 
 func TestGetPrimes(t *testing.T) {
-	t.Run("")
+	//t.Run("")
 }

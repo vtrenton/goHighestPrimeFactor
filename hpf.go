@@ -34,7 +34,7 @@ func main() {
 	limit := int(math.Sqrt(float64(n)))
 
 	for factor := range factors(n) {
-		if factor >= limit {
+		if factor > limit {
 			break // stop at sqrt(n) - larger factors aren't needed for prime calculation
 		}
 		relevantFactors = append(relevantFactors, factor)
