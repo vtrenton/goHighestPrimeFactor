@@ -68,21 +68,6 @@ func factors(n int) iter.Seq[int] {
 	}
 }
 
-// getfactors returns all factors up to sqrt(n) as a slice
-// Kept for backward compatibility and when you need a slice
-func getfactors(n int) []int {
-	var factorSlice []int
-	limit := int(math.Sqrt(float64(n)))
-
-	for factor := range factors(n) {
-		if factor >= limit {
-			break // stop at sqrt(n)
-		}
-		factorSlice = append(factorSlice, factor)
-	}
-	return factorSlice
-}
-
 func isprime(n int) bool {
 	if n < 2 {
 		return false
