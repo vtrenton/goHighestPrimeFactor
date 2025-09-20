@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"iter"
-	"log"
 	"math"
 	"os"
 	"strconv"
@@ -15,7 +14,8 @@ func main() {
 
 	hpf, err := run(osargs)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
 	}
 
 	fmt.Println(hpf)
@@ -23,7 +23,7 @@ func main() {
 
 func run(osargs []string) (int, error) {
 	if len(osargs) != 2 {
-		return 0, errors.New("usage: pass in a single  postive number as an Arg that you want the highest prime factorial for")
+		return 0, errors.New("usage: pass in a single postive number as an Arg that you want the highest prime factorial for")
 	}
 
 	n, err := strconv.Atoi(osargs[1])
