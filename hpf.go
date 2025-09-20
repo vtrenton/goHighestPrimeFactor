@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"iter"
 	"log"
 	"math"
 	"os"
@@ -28,30 +29,58 @@ func main() {
 	//n := 157732
 	//n := 100
 
-	factors := getfactors(n)
-	if len(factors) == 0 {
+	// Collect factors up to sqrt(n) for prime calculation
+	var relevantFactors []int
+	limit := int(math.Sqrt(float64(n)))
+
+	for factor := range factors(n) {
+		if factor >= limit {
+			break // stop at sqrt(n) - larger factors aren't needed for prime calculation
+		}
+		relevantFactors = append(relevantFactors, factor)
+	}
+
+	if len(relevantFactors) == 0 {
 		fmt.Println("Input number has no factors!")
 		return
 	}
 
-	pfactors := getprimes(factors)
+	pfactors := getprimes(relevantFactors)
 
 	fmt.Println(pfactors[len(pfactors)-1])
 }
 
-func getfactors(n int) []int {
-	var factors []int
-	if n <= 2 { //intentionally not supporting negative numbers for now
-		return factors //early return for inputs between -2 and 2
-	}
+// factors returns an iterator that yields factors of n one at a time
+// This allows for lazy evaluation and early termination
+func factors(n int) iter.Seq[int] {
+	return func(yield func(int) bool) {
+		if n <= 2 {
+			return // no factors for numbers <= 2
+		}
 
-	limit := int(math.Sqrt(float64(n)))
-	for i := 2; i < limit; i++ {
-		if n%i == 0 {
-			factors = append(factors, i)
+		for i := 2; i < n; i++ {
+			if n%i == 0 {
+				if !yield(i) {
+					return // consumer requested early termination
+				}
+			}
 		}
 	}
-	return factors
+}
+
+// getfactors returns all factors up to sqrt(n) as a slice
+// Kept for backward compatibility and when you need a slice
+func getfactors(n int) []int {
+	var factorSlice []int
+	limit := int(math.Sqrt(float64(n)))
+
+	for factor := range factors(n) {
+		if factor >= limit {
+			break // stop at sqrt(n)
+		}
+		factorSlice = append(factorSlice, factor)
+	}
+	return factorSlice
 }
 
 func isprime(n int) bool {
@@ -68,7 +97,7 @@ func isprime(n int) bool {
 
 func getprimes(factors []int) []int {
 	var pfactors []int
-	for factor := range factors {
+	for _, factor := range factors {
 		if isprime(factor) {
 			pfactors = append(pfactors, factor)
 		}
