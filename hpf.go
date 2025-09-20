@@ -10,15 +10,18 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: pass in number as an Arg that you want the highest prime factorial for.")
+		fmt.Println("Usage: pass in a postive number as an Arg that you want the highest prime factorial for.")
 		os.Exit(1)
 	}
 
 	n, err := strconv.Atoi(os.Args[1])
 	if err != nil {
-		log.Fatalf("Argument was not a number")
+		log.Fatal("Argument was not a number")
 	}
 
+	if n < 0 {
+		log.Fatal("negative numbers are not supported")
+	}
 	// DEBUG: test cases
 
 	//n := 1723343
@@ -38,7 +41,7 @@ func main() {
 
 func getfactors(n int) []int {
 	var factors []int
-	if n >= -2 && n <= 2 {
+	if n <= 2 { //intentionally not supporting negative numbers for now
 		return factors //early return for inputs between -2 and 2
 	}
 

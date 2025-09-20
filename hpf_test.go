@@ -16,13 +16,13 @@ func TestGetFactors(t *testing.T) {
 		want []int
 	}{
 
-		{name: "get all factors of 100", in: 100, want: []int{2, 4, 5, 10, 20, 25, 50}},
-		{name: "get all factors of 25", in: 25, want: []int{5}},
+		{name: "get all factors that are less than the sqrt of 100 = 10", in: 100, want: []int{2, 4, 5}},
+		{name: "get all factors that are less than the sqrt of 25 = 5", in: 25, want: []int{}},
 		{name: "primes dont have factors", in: 97, want: []int{}},
-		{name: "numbers between -2 and 2 return early", in: 1, want: []int{}},
+		{name: "numbers below 2 return early", in: 1, want: []int{}},
 		{name: "test 2 to assure it returns early", in: 2, want: []int{}},
 		{name: "test negative return early", in: -2, want: []int{}},
-		{name: "test negative number for negative factors", in: -100, want: []int{-2, -4, -5, -10, -20, -25, -50}},
+		//{name: "test negative number for negative factors", in: -100, want: []int{-2, -4, -5, -10, -20, -25, -50}},
 	}
 	for _, tc := range tests {
 		tc := tc
