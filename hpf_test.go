@@ -117,7 +117,7 @@ func TestGetHpf(t *testing.T) {
 		want int
 	}{
 		{name: "generic test", in: []int{2, 3, 4, 5, 6, 7, 8, 9}, want: 7},
-		{name: "unordered test (order preservation)", in: []int{3, 12, 11, 14, 8, 7}, want: 7},
+		{name: "unordered test (always get highest value)", in: []int{3, 12, 11, 14, 8, 7}, want: 11},
 		{name: "single prime", in: []int{7}, want: 7},
 		{name: "single composite", in: []int{8}, want: 0},
 		{name: "no primes", in: []int{4, 6, 8, 9}, want: 0},
