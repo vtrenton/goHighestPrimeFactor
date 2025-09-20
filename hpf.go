@@ -78,13 +78,11 @@ func isprime(n int) bool {
 	return true
 }
 
-// lists are fed in in an ordered manner
-// This is an assumption of the program that we don't handle
-// but for efficency this is just going to return the last in the list which is the hpf
+// get the last and highest value in the hpf
 func gethpf(factors []int) int {
 	var hpf int
 	for _, factor := range factors {
-		if isprime(factor) {
+		if isprime(factor) && factor > hpf { // handle a bug if the list is unsorted for some reason
 			hpf = factor
 		}
 	}
