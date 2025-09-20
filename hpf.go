@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"iter"
 	"math"
 	"os"
 	"strconv"
@@ -35,38 +34,33 @@ func run(osargs []string) (int, error) {
 		return 0, errors.New("negative numbers are not supported")
 	}
 
-	// Collect factors up to sqrt(n) for prime calculation
-	var relevantFactors []int
-	for factor := range factorsUpToSqrt(n) {
-		relevantFactors = append(relevantFactors, factor)
-	}
+	// Get factors up to sqrt(n) for prime calculation
+	factors := relevantFactors(n)
 
-	if len(relevantFactors) == 0 {
+	if len(factors) == 0 {
 		return 0, errors.New("input number is prime")
 	}
 
-	pfactors := getprimes(relevantFactors)
+	pfactors := getprimes(factors)
 
 	return pfactors[len(pfactors)-1], nil
 }
 
-// factorsUpToSqrt returns an iterator that yields factors of n up to sqrt(n)
+// relevantFactors returns all factors of n up to sqrt(n)
 // This is specifically optimized for prime factorization where larger factors aren't needed
-func factorsUpToSqrt(n int) iter.Seq[int] {
-	return func(yield func(int) bool) {
-		if n <= 2 {
-			return // no factors for numbers <= 2
-		}
+func relevantFactors(n int) []int {
+	var factors []int
+	if n <= 2 {
+		return factors // no factors for numbers <= 2
+	}
 
-		limit := int(math.Sqrt(float64(n)))
-		for i := 2; i <= limit; i++ {
-			if n%i == 0 {
-				if !yield(i) {
-					return // consumer requested early termination
-				}
-			}
+	limit := int(math.Sqrt(float64(n)))
+	for i := 2; i <= limit; i++ {
+		if n%i == 0 {
+			factors = append(factors, i)
 		}
 	}
+	return factors
 }
 
 func isprime(n int) bool {

@@ -46,7 +46,7 @@ func TestRun(t *testing.T) {
 	}
 }
 
-func TestFactorsUpToSqrt(t *testing.T) {
+func TestRelevantFactors(t *testing.T) {
 	t.Parallel()
 
 	// Test factors up to sqrt(n)
@@ -70,28 +70,19 @@ func TestFactorsUpToSqrt(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			var got []int
-			for factor := range factorsUpToSqrt(tc.in) {
-				got = append(got, factor)
-			}
+			got := relevantFactors(tc.in)
 			if !slices.Equal(got, tc.want) {
 				t.Errorf("got %v, want %v", got, tc.want)
 			}
 		})
 	}
 
-	// Test early termination
-	t.Run("early termination", func(t *testing.T) {
-		var got []int
-		for factor := range factorsUpToSqrt(100) {
-			if factor >= 10 {
-				break
-			}
-			got = append(got, factor)
-		}
-		want := []int{2, 4, 5}
+	// Test boundary condition for perfect square
+	t.Run("boundary condition sqrt exact", func(t *testing.T) {
+		got := relevantFactors(100)
+		want := []int{2, 4, 5, 10}
 		if !slices.Equal(got, want) {
-			t.Errorf("early termination test failed! got %v, want %v", got, want)
+			t.Errorf("got %v, want %v", got, want)
 		}
 	})
 }
