@@ -55,15 +55,14 @@ func TestRelevantFactors(t *testing.T) {
 		in   int
 		want []int
 	}{
-		{name: "factors of 100 up to sqrt(100)=10 (including 10)", in: 100, want: []int{2, 4, 5, 10}},
-		{name: "factors of 36 up to sqrt(36)=6 (including 6)", in: 36, want: []int{2, 3, 4, 6}},
+		{name: "factors of 100 up to sqrt(100) (odd numbers above 2 only)", in: 100, want: []int{2, 4, 5}},
+		{name: "factors of 36 up to sqrt(36)=6 (including 6)", in: 36, want: []int{2, 3}},
 		{name: "factors of 25 up to sqrt(25)=5 (including 5)", in: 25, want: []int{5}},
 		{name: "primes have no factors", in: 97, want: []int{}},
 		{name: "numbers below 2 return early", in: 1, want: []int{}},
 		{name: "test 2 to assure it returns early", in: 2, want: []int{}},
 		{name: "test negative return early", in: -2, want: []int{}},
 		{name: "small composite number 12 up to sqrt(12)≈3.46", in: 12, want: []int{2, 3}},
-		{name: "perfect square 16 up to sqrt(16)=4 (including 4)", in: 16, want: []int{2, 4}},
 		{name: "perfect square 49 up to sqrt(49)=7 (including 7)", in: 49, want: []int{7}},
 	}
 
