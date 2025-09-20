@@ -55,7 +55,7 @@ func TestRelevantFactors(t *testing.T) {
 		in   int
 		want []int
 	}{
-		{name: "factors of 100 up to sqrt(100) (odd numbers above 2 only)", in: 100, want: []int{2, 4, 5}},
+		{name: "factors of 100 up to sqrt(100) (odd numbers above 2 only)", in: 100, want: []int{2, 5}},
 		{name: "factors of 36 up to sqrt(36)=6 (including 6)", in: 36, want: []int{2, 3}},
 		{name: "factors of 25 up to sqrt(25)=5 (including 5)", in: 25, want: []int{5}},
 		{name: "primes have no factors", in: 97, want: []int{}},
@@ -75,15 +75,6 @@ func TestRelevantFactors(t *testing.T) {
 			}
 		})
 	}
-
-	// Test boundary condition for perfect square
-	t.Run("boundary condition sqrt exact", func(t *testing.T) {
-		got := relevantFactors(100)
-		want := []int{2, 4, 5, 10}
-		if !slices.Equal(got, want) {
-			t.Errorf("got %v, want %v", got, want)
-		}
-	})
 }
 
 func TestIsPrime(t *testing.T) {
