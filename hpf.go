@@ -41,9 +41,7 @@ func run(osargs []string) (int, error) {
 		return 0, errors.New("input number is prime")
 	}
 
-	pfactors := getprimes(factors)
-
-	return pfactors[len(pfactors)-1], nil
+	return gethpf(factors), nil
 }
 
 // relevantFactors returns all factors of n up to sqrt(n)
@@ -80,12 +78,15 @@ func isprime(n int) bool {
 	return true
 }
 
-func getprimes(factors []int) []int {
-	var pfactors []int
+// lists are fed in in an ordered manner
+// This is an assumption of the program that we don't handle
+// but for efficency this is just going to return the last in the list which is the hpf
+func gethpf(factors []int) int {
+	var hpf int
 	for _, factor := range factors {
 		if isprime(factor) {
-			pfactors = append(pfactors, factor)
+			hpf = factor
 		}
 	}
-	return pfactors
+	return hpf
 }

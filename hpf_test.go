@@ -108,22 +108,25 @@ func TestIsPrime(t *testing.T) {
 	}
 }
 
-func TestGetPrimes(t *testing.T) {
+func TestGetHpf(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
 		name string
 		in   []int
-		want []int
+		want int
 	}{
-		{name: "generic test", in: []int{1, 2, 3, 4, 5, 6, 7, 8, 9}, want: []int{2, 3, 5, 7}},
-		{name: "unordered test (order preservation)", in: []int{3, 12, 11, 14, 8, 7}, want: []int{3, 11, 7}},
-		{name: "empty test", in: []int{}, want: []int{}},
+		{name: "generic test", in: []int{2, 3, 4, 5, 6, 7, 8, 9}, want: 7},
+		{name: "unordered test (order preservation)", in: []int{3, 12, 11, 14, 8, 7}, want: 7},
+		{name: "single prime", in: []int{7}, want: 7},
+		{name: "single composite", in: []int{8}, want: 0},
+		{name: "no primes", in: []int{4, 6, 8, 9}, want: 0},
+		{name: "empty list", in: []int{}, want: 0},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			if got := getprimes(tc.in); !slices.Equal(got, tc.want) {
+			if got := gethpf(tc.in); got != tc.want {
 				t.Errorf("test %s failed, got: %v want %v", tc.name, got, tc.want)
 			}
 		})
