@@ -51,27 +51,37 @@ func TestRelevantFactors(t *testing.T) {
 
 	// Test factors up to sqrt(n)
 	tests := []struct {
-		name string
-		in   int
-		want []int
+		name    string
+		in      int
+		want    []int
+		wantErr bool
 	}{
-		{name: "factors of 100 up to sqrt(100) (odd numbers above 2 only)", in: 100, want: []int{2, 5}},
-		{name: "factors of 36 up to sqrt(36)=6 (including 6)", in: 36, want: []int{2, 3}},
-		{name: "factors of 25 up to sqrt(25)=5 (including 5)", in: 25, want: []int{5}},
-		{name: "primes have no factors", in: 97, want: []int{}},
-		{name: "numbers below 2 return early", in: 1, want: []int{}},
-		{name: "test 2 to assure it returns early", in: 2, want: []int{}},
-		{name: "test negative return early", in: -2, want: []int{}},
-		{name: "small composite number 12 up to sqrt(12)≈3.46", in: 12, want: []int{2, 3}},
-		{name: "perfect square 49 up to sqrt(49)=7 (including 7)", in: 49, want: []int{7}},
+		{name: "factors of 100 up to sqrt(100) (odd numbers above 2 only)", in: 100, want: []int{2, 5}, wantErr: false},
+		{name: "factors of 36 up to sqrt(36)=6 (including 6)", in: 36, want: []int{2, 3}, wantErr: false},
+		{name: "factors of 25 up to sqrt(25)=5 (including 5)", in: 25, want: []int{5}, wantErr: false},
+		{name: "primes have no factors", in: 97, want: []int{}, wantErr: false},
+		{name: "numbers below 2 return error", in: 1, want: []int{}, wantErr: true},
+		{name: "test 2 has no factors (is prime)", in: 2, want: []int{}, wantErr: false},
+		{name: "test negative return error", in: -2, want: []int{}, wantErr: true},
+		{name: "small composite number 12 up to sqrt(12)≈3.46", in: 12, want: []int{2, 3}, wantErr: false},
+		{name: "perfect square 49 up to sqrt(49)=7 (including 7)", in: 49, want: []int{7}, wantErr: false},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			got := relevantFactors(tc.in)
-			if !slices.Equal(got, tc.want) {
-				t.Errorf("got %v, want %v", got, tc.want)
+			got, err := relevantFactors(tc.in)
+
+			if tc.wantErr {
+				if err == nil {
+					t.Errorf("expected error but got none, result: %v", got)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("unexpected error: %v", err)
+				} else if !slices.Equal(got, tc.want) {
+					t.Errorf("got %v, want %v", got, tc.want)
+				}
 			}
 		})
 	}

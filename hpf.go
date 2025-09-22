@@ -20,7 +20,12 @@ func main() {
 	}
 
 	// Get factors up to sqrt(n) for prime calculation
-	factors := relevantFactors(composite)
+	var factors []int
+	factors, err = relevantFactors(composite)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
 
 	// Get the highest factor that is prime and return it.
 	var hpf int
@@ -54,16 +59,16 @@ func getComposite(osargs []string) (int, error) {
 
 // relevantFactors returns all factors of n up to sqrt(n)
 // This is specifically optimized for prime factorization where larger factors aren't needed
-func relevantFactors(n int) []int {
+func relevantFactors(n int) ([]int, error) {
 	var factors []int
-	if n <= 2 {
-		return factors // no factors for numbers <= 2
+	if n < 2 {
+		return []int{}, errors.New("numbers under two have no factors")
 	}
 
 	limit := int(math.Sqrt(float64(n)))
 
-	// Append 2 to the list if n is even
-	if n%2 == 0 {
+	// Append 2 to the list if n is even (but not if n is 2 itself)
+	if n%2 == 0 && n > 2 {
 		factors = append(factors, 2)
 	}
 	for i := 3; i <= limit; i += 2 {
@@ -71,19 +76,7 @@ func relevantFactors(n int) []int {
 			factors = append(factors, i)
 		}
 	}
-	return factors
-}
-
-func isprime(n int) bool {
-	if n < 2 {
-		return false
-	}
-	for i := 2; i <= int(math.Sqrt(float64(n))); i++ {
-		if n%i == 0 {
-			return false
-		}
-	}
-	return true
+	return factors, nil
 }
 
 // get the last and highest value in the hpf
@@ -100,4 +93,17 @@ func gethpf(factors []int) (int, error) {
 		}
 	}
 	return hpf, nil
+}
+
+// helper func for gethpf
+func isprime(n int) bool {
+	if n < 2 {
+		return false
+	}
+	for i := 2; i <= int(math.Sqrt(float64(n))); i++ {
+		if n%i == 0 {
+			return false
+		}
+	}
+	return true
 }
