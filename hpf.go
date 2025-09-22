@@ -9,9 +9,22 @@ import (
 )
 
 func main() {
-	osargs := os.Args
+	var err error
 
-	hpf, err := run(osargs)
+	// get the composite from the Args
+	var composite int
+	composite, err = getComposite(os.Args)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+
+	// Get factors up to sqrt(n) for prime calculation
+	factors := relevantFactors(composite)
+
+	// Get the highest factor that is prime and return it.
+	var hpf int
+	hpf, err = gethpf(factors)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
@@ -20,28 +33,23 @@ func main() {
 	fmt.Println(hpf)
 }
 
-func run(osargs []string) (int, error) {
+func getComposite(osargs []string) (int, error) {
+	// validate there are the correct amount or arguments
+	// else document usage to user
 	if len(osargs) != 2 {
 		return 0, errors.New("usage: pass in a single postive non-prime number as an Arg that you want the highest prime factorial for")
 	}
-
+	// try to convert osArg to int
 	n, err := strconv.Atoi(osargs[1])
 	if err != nil {
 		return 0, err
 	}
-
+	// validate n is not a negative number
 	if n < 0 {
 		return 0, errors.New("negative numbers are not supported")
 	}
 
-	// Get factors up to sqrt(n) for prime calculation
-	factors := relevantFactors(n)
-
-	if len(factors) == 0 {
-		return 0, errors.New("input number is prime")
-	}
-
-	return gethpf(factors), nil
+	return n, err
 }
 
 // relevantFactors returns all factors of n up to sqrt(n)
@@ -79,12 +87,17 @@ func isprime(n int) bool {
 }
 
 // get the last and highest value in the hpf
-func gethpf(factors []int) int {
+func gethpf(factors []int) (int, error) {
+	// handle case of empty list (likely means composite was prime)
+	if len(factors) == 0 {
+		return 0, errors.New("input number is prime")
+	}
+
 	var hpf int
 	for _, factor := range factors {
 		if isprime(factor) && factor > hpf { // handle a bug if the list is unsorted for some reason
 			hpf = factor
 		}
 	}
-	return hpf
+	return hpf, nil
 }
