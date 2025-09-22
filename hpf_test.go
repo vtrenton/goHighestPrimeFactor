@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestRun(t *testing.T) {
+func TestGetComposite(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -14,22 +14,22 @@ func TestRun(t *testing.T) {
 		want    int
 		wantErr bool
 	}{
-		{name: "valid input returns highest prime factor", args: []string{"program", "100"}, want: 5, wantErr: false},
-		{name: "prime number has no factors", args: []string{"program", "97"}, want: 0, wantErr: true},
-		{name: "small number with factors", args: []string{"program", "25"}, want: 5, wantErr: false},
+		{name: "valid input returns number", args: []string{"program", "100"}, want: 100, wantErr: false},
+		{name: "prime number input", args: []string{"program", "97"}, want: 97, wantErr: false},
+		{name: "small number input", args: []string{"program", "25"}, want: 25, wantErr: false},
 		{name: "no arguments returns error", args: []string{"program"}, want: 0, wantErr: true},
 		{name: "too many arguments returns error", args: []string{"program", "100", "200"}, want: 0, wantErr: true},
 		{name: "non-numeric argument returns error", args: []string{"program", "abc"}, want: 0, wantErr: true},
 		{name: "negative number returns error", args: []string{"program", "-5"}, want: 0, wantErr: true},
-		{name: "zero returns error", args: []string{"program", "0"}, want: 0, wantErr: true},
-		{name: "one returns error", args: []string{"program", "1"}, want: 0, wantErr: true},
-		{name: "two returns error", args: []string{"program", "2"}, want: 0, wantErr: true},
+		{name: "zero is valid", args: []string{"program", "0"}, want: 0, wantErr: false},
+		{name: "one is valid", args: []string{"program", "1"}, want: 1, wantErr: false},
+		{name: "two is valid", args: []string{"program", "2"}, want: 2, wantErr: false},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			got, err := run(tc.args)
+			got, err := getComposite(tc.args)
 
 			if tc.wantErr {
 				if err == nil {
@@ -112,22 +112,33 @@ func TestGetHpf(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name string
-		in   []int
-		want int
+		name    string
+		in      []int
+		want    int
+		wantErr bool
 	}{
-		{name: "generic test", in: []int{2, 3, 4, 5, 6, 7, 8, 9}, want: 7},
-		{name: "unordered test (always get highest value)", in: []int{3, 12, 11, 14, 8, 7}, want: 11},
-		{name: "single prime", in: []int{7}, want: 7},
-		{name: "single composite", in: []int{8}, want: 0},
-		{name: "no primes", in: []int{4, 6, 8, 9}, want: 0},
-		{name: "empty list", in: []int{}, want: 0},
+		{name: "generic test", in: []int{2, 3, 4, 5, 6, 7, 8, 9}, want: 7, wantErr: false},
+		{name: "unordered test (always get highest value)", in: []int{3, 12, 11, 14, 8, 7}, want: 11, wantErr: false},
+		{name: "single prime", in: []int{7}, want: 7, wantErr: false},
+		{name: "single composite", in: []int{8}, want: 0, wantErr: false},
+		{name: "no primes", in: []int{4, 6, 8, 9}, want: 0, wantErr: false},
+		{name: "empty list", in: []int{}, want: 0, wantErr: true},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			if got := gethpf(tc.in); got != tc.want {
-				t.Errorf("test %s failed, got: %v want %v", tc.name, got, tc.want)
+			got, err := gethpf(tc.in)
+
+			if tc.wantErr {
+				if err == nil {
+					t.Errorf("expected error but got none, result: %d", got)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("unexpected error: %v", err)
+				} else if got != tc.want {
+					t.Errorf("got %d, want %d", got, tc.want)
+				}
 			}
 		})
 	}
